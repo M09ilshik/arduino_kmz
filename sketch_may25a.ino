@@ -55,17 +55,12 @@ void loop() {
   } 
     else if (tagID == cardID && pause == 0 && start == 0 && stop == 1 && back == 0) {
       timesp = millis();
-      timeb = timep - timest;
-      timee = millis() - timesp;
       Serial.println("Access Granted!");
       start = 0;
       stop = 0;
       back = 1;
       digitalWrite(6, LOW);
       digitalWrite(5, HIGH);
-      if (timee == timeb){
-        digitalWrite(5, LOW);
-      }   
       time1=millis();
     }
       if(millis()-time1 <= 500){ // устраняем дребезг кнопки, блокировка нажатия 200 мс
@@ -78,6 +73,12 @@ void loop() {
     Serial.print("ID: ");
     Serial.println(tagID);
     delay(2000);
+  }
+
+  timeb = timep - timest;
+  timee = millis() - timesp;
+  if (timee >= timeb){
+        digitalWrite(5, LOW);
   }
 }
 
