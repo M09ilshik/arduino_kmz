@@ -29,7 +29,6 @@ void setup() {
 }
 
 void loop() {
-  
  while (getID()) {
   delay(50);
   unsigned int distance = sonar.ping_cm();
@@ -37,29 +36,12 @@ void loop() {
   Serial.println("см");
     if (tagID == cardID && start == 0 && pause == 0) {
       Serial.println("Access Granted!");
-      if (back == 0 && 31 - distance > 4 && distance < 28){
+      if (back == 0 && 31 - distance >= 3 && distance <= 29){
         digitalWrite(5, LOW);
         digitalWrite(6, HIGH);
         back = 1;
-        break
       }
-      else if (back == 1 && 31 - distance > 4 && distance < 28){
-        digitalWrite(5, HIGH);
-        digitalWrite(6, LOW);
-        back = 0;
-        break;
-      }
-      start = 1;
-      time1=millis();
-    }
-      if(millis()-time1 <= 500){ // устраняем дребезг кнопки, блокировка нажатия 200 мс
-    pause = 1;
-    delay(500);
-    pause = 0;
-  }
-    else if (pause == 0 && start == 1 && 31 - distance > 4 && distance < 28) {
-      delay(distance / 15);
-      start = 0;
+      delay((30 - distance)*1000/3);
       digitalWrite(5, LOW);
       digitalWrite(6, LOW);
       time1=millis();
@@ -69,7 +51,15 @@ void loop() {
     delay(500);
     pause = 0;
   }
-    
+    if (back == 1 && start == 0 && 31 - distance >= 3 && distance <= 29){
+        delay(6000);
+        digitalWrite(5, HIGH);
+        digitalWrite(6, LOW);
+        back = 0;
+        delay((30 - distance)*1000/3);
+        digitalWrite(5, LOW);
+        digitalWrite(6, LOW);
+    }
     else if (tagID != cardID) {
       Serial.println("Access Denied!");
     }
